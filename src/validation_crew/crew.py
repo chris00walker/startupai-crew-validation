@@ -23,14 +23,16 @@ HITL Checkpoints (5):
 import os
 from crewai import LLM, Agent, Crew, Process, Task
 from crewai.project import CrewBase, agent, crew, task
-from crewai.tools import InvokeCrewAIAutomationTool
+from crewai_tools import InvokeCrewAIAutomationTool
 
 
 # Create invoker for Crew 3 (Decision Engine)
 # Environment variables must be set in AMP dashboard
 decision_crew_invoker = InvokeCrewAIAutomationTool(
-    automation_url=os.getenv("CREW_3_URL", ""),
-    bearer_token=os.getenv("CREW_3_BEARER_TOKEN", ""),
+    crew_api_url=os.getenv("CREW_3_URL", ""),
+    crew_bearer_token=os.getenv("CREW_3_BEARER_TOKEN", ""),
+    crew_name="Decision Crew",
+    crew_description="3-agent synthesis and decision engine for pivot/proceed recommendations",
 )
 
 
