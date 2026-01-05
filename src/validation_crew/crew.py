@@ -23,6 +23,15 @@ HITL Checkpoints (5):
 import os
 from crewai import LLM, Agent, Crew, Process, Task
 from crewai.project import CrewBase, agent, crew, task
+from crewai.tools import InvokeCrewAIAutomationTool
+
+
+# Create invoker for Crew 3 (Decision Engine)
+# Environment variables must be set in AMP dashboard
+decision_crew_invoker = InvokeCrewAIAutomationTool(
+    automation_url=os.getenv("CREW_3_URL", ""),
+    bearer_token=os.getenv("CREW_3_BEARER_TOKEN", ""),
+)
 
 
 @CrewBase
@@ -63,10 +72,10 @@ class ValidationCrew:
 
     @agent
     def analytics_agent(self) -> Agent:
-        """P3: Deploy experiments and compute metrics."""
+        """P3: Deploy experiments and compute metrics + trigger Crew 3."""
         return Agent(
             config=self.agents_config["analytics_agent"],
-            tools=[],  # Will add InvokeCrewAIAutomationTool
+            tools=[decision_crew_invoker],  # Invokes Crew 3 after validation
             reasoning=False,
             inject_date=True,
             allow_delegation=False,
